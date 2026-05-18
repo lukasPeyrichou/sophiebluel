@@ -186,3 +186,31 @@ footer nav ul {
 	margin: 2em
 }
 
+/* =====================
+   Filtres par catégorie
+   ===================== */
+.filters {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	margin-bottom: 2em;
+}
+
+.filter-btn {
+	font-family: 'Work Sans', sans-serif;
+	font-size: 1em;
+	padding: 10px 25px;
+	border: 1px solid #1D6154;
+	border-radius: 60px;
+	background-color: white;
+	color: #1D6154;
+	cursor: pointer;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+	background-color: #1D6154;
+	color: white;
+}
+

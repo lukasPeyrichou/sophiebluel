@@ -1,9 +1,6 @@
-// =====================
-// Récupération des données depuis l'API
-// =====================
-
 const API_URL = "http://localhost:5678/api";
 
+// -- Fetch API --
 async function fetchWorks() {
   const response = await fetch(`${API_URL}/works`);
   const works = await response.json();
@@ -16,10 +13,7 @@ async function fetchCategories() {
   return categories;
 }
 
-// =====================
-// Affichage de la galerie
-// =====================
-
+// -- Galerie --
 function displayWorks(works) {
   const gallery = document.querySelector(".gallery");
   gallery.innerHTML = "";
@@ -40,10 +34,7 @@ function displayWorks(works) {
   });
 }
 
-// =====================
-// Filtres par catégorie (Étapes 3 & 4)
-// =====================
-
+// -- Filtres --
 function displayFilters(categories, allWorks) {
   const portfolio = document.querySelector("#portfolio");
 
@@ -84,10 +75,7 @@ function setActiveButton(activeBtn, container) {
   activeBtn.classList.add("active");
 }
 
-// =====================
-// Initialisation
-// =====================
-
+// -- Init --
 async function init() {
   const [works, categories] = await Promise.all([fetchWorks(), fetchCategories()]);
   displayWorks(works);

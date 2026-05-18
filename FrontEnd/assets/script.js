@@ -68,10 +68,8 @@ function setupEditionMode() {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  // Bandeau
   document.getElementById("edit-banner").classList.remove("hidden");
 
-  // Login → Logout
   const navLogin = document.getElementById("nav-login");
   navLogin.textContent = "logout";
   navLogin.href = "#";
@@ -81,11 +79,9 @@ function setupEditionMode() {
     window.location.reload();
   });
 
-  // Cacher les filtres
   const filters = document.querySelector(".filters");
   if (filters) filters.classList.add("hidden");
 
-  // Bouton modifier
   document.getElementById("btn-edit").classList.remove("hidden");
 }
 
@@ -115,26 +111,40 @@ function showFormView() {
   formView.classList.remove("hidden");
 }
 
+function displayModalGallery(works) {
+  const modalGallery = document.querySelector(".modal-gallery");
+  modalGallery.innerHTML = "";
+  works.forEach((work) => {
+    const figure = document.createElement("figure");
+    figure.classList.add("modal-figure");
+    const img = document.createElement("img");
+    img.src = work.imageUrl;
+    img.alt = work.title;
+    const btnDelete = document.createElement("button");
+    btnDelete.classList.add("btn-delete");
+    btnDelete.innerHTML = "🗑️";
+    btnDelete.dataset.id = work.id;
+    btnDelete.addEventListener("click", () => deleteWork(work.id, figure, works));
+    figure.appendChild(img);
+    figure.appendChild(btnDelete);
+    modalGallery.appendChild(figure);
+  });
+}
+
 function setupModal(allWorks, categories) {
-  // Ouvrir
   document.getElementById("btn-edit").addEventListener("click", () => {
     displayModalGallery(allWorks);
     openModal();
   });
 
-  // Fermer (croix et overlay)
   document.querySelectorAll(".modal-close").forEach((btn) =>
     btn.addEventListener("click", closeModal)
   );
   document.querySelector(".modal-overlay").addEventListener("click", closeModal);
 
-  // Naviguer vers le formulaire
   document.getElementById("btn-add-photo").addEventListener("click", showFormView);
-
-  // Retour vers la galerie
   document.querySelector(".modal-back").addEventListener("click", showGalleryView);
 
-  // Remplir les catégories du formulaire
   const select = document.getElementById("work-category");
   categories.forEach((cat) => {
     const option = document.createElement("option");
@@ -143,7 +153,6 @@ function setupModal(allWorks, categories) {
     select.appendChild(option);
   });
 
-  // Preview image
   document.getElementById("work-image").addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -151,30 +160,6 @@ function setupModal(allWorks, categories) {
     preview.src = URL.createObjectURL(file);
     preview.classList.remove("hidden");
     document.querySelector(".upload-placeholder").classList.add("hidden");
-  });
-}
-
-// -- Galerie de la modale --
-function displayModalGallery(works) {
-  const modalGallery = document.querySelector(".modal-gallery");
-  modalGallery.innerHTML = "";
-  works.forEach((work) => {
-    const figure = document.createElement("figure");
-    figure.classList.add("modal-figure");
-
-    const img = document.createElement("img");
-    img.src = work.imageUrl;
-    img.alt = work.title;
-
-    const btnDelete = document.createElement("button");
-    btnDelete.classList.add("btn-delete");
-    btnDelete.innerHTML = "🗑️";
-    btnDelete.dataset.id = work.id;
-    btnDelete.addEventListener("click", () => deleteWork(work.id, figure, works));
-
-    figure.appendChild(img);
-    figure.appendChild(btnDelete);
-    modalGallery.appendChild(figure);
   });
 }
 
@@ -187,17 +172,14 @@ async function deleteWork(id, figureElement, allWorks) {
   });
 
   if (response.status === 204) {
-    // Retirer de la modale
     figureElement.remove();
-
-    // Retirer de la galerie principale
     const index = allWorks.findIndex((w) => w.id === id);
     if (index !== -1) allWorks.splice(index, 1);
     displayWorks(allWorks);
   }
 }
 
-// -- Ajout d'un travail (étape 8.1 & 8.2) --
+// -- Ajout d'un travail (étapes 8.1 & 8.2) --
 function setupAddWorkForm(allWorks) {
   const form = document.getElementById("add-work-form");
   form.addEventListener("submit", async (e) => {
